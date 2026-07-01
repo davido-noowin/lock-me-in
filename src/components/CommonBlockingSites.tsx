@@ -1,36 +1,38 @@
 import { useState, useEffect } from "react";
 
-type BlockedSite = {
-    id: number;
-    name: string;
-    link: string;
-    image?: string;
-}
-
-const blockedSites: BlockedSite[] = [
-        {id: 1, name: 'TikTok', link: 'https://www.tiktok.com/'},
-        {id: 2, name: 'Instagram', link: 'https://www.instagram.com/'},
-        {id: 3, name: 'YouTube Shorts', link: 'https://www.youtube.com/shorts/'},
-    ]
-
 export default function CommonBlockingSites() {
-    const [currentURL, setCurrentURL] = useState<string>("");
+    const [enabled, setEnabled] = useState(false);
 
     useEffect(() => {
-        chrome.tabs.query({ active: true, currentWindow: true}, function(tabs) {
-            if (tabs[0] && tabs[0].url) {
-                setCurrentURL(tabs[0].url);
-                console.log(blockedSites);
+        chrome.storage.local.get({ redirectEnabled: false }, (result) => {
+            setEnabled(Boolean(result.redirectEnabled));
+        });
 
-                // more code here
+        const handleStorageChange = ( 
+            changes: { [key: string]: chrome.storage.StorageChange },
+            area: string
+        ) => {
+            if (area === "local" && changes.redirectEnabled) {
+                setEnabled(Boolean(changes.redirectEnabled.newValue));
             }
-        })
-    }, [currentURL])
+        };
+
+        chrome.storage.onChanged.addListener(handleStorageChange);
+        return () => {
+            chrome.storage.onChanged.removeListener(handleStorageChange);
+        };
+    }, []);
+
+    function toggleRedirect() {
+        chrome.storage.local.set({ redirectEnabled: !enabled });
+    }
 
     return (
         <div>
             Suggested Sites to Block
-            {currentURL}
+            <button onClick={toggleRedirect}>
+                {enabled ? "Enable YouTube Shorts" : "Disable YouTube Shorts" }
+            </button>
 
         </div>
     )

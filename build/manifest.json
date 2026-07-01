@@ -7,6 +7,15 @@
     "default_popup": "index.html"
   },
   "permissions": [
-    "activeTab"
-  ]
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://*.google.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
 }
