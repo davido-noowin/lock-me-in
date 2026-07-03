@@ -8,16 +8,15 @@ const redirectRule = {
         redirect: { url: "https://www.google.com/"}
     },
     condition: {
-        urlFilter: "^https://(www\\.)?youtube\\.com/shorts/.*",
+        urlFilter: "||youtube.com/shorts",
         resourceTypes: ["main_frame"],
-        requestDomains: ["youtube.com"]
     }
 };
 
 function enableRule() {
   chrome.declarativeNetRequest.updateDynamicRules({
     addRules: [redirectRule],
-    removeRuleIds: []
+    removeRuleIds: [RULE_ID]
   }, () => {
     if (chrome.runtime.lastError) {
       console.error("DeclarativeNetRequest failed:", chrome.runtime.lastError);
@@ -29,6 +28,10 @@ function disableRule() {
   chrome.declarativeNetRequest.updateDynamicRules({
     addRules: [],
     removeRuleIds: [RULE_ID]
+  }, () => {
+    if (chrome.runtime.lastError) {
+      console.error("Failed to disable rule:", chrome.runtime.lastError);
+    }
   });
 }
 
@@ -49,7 +52,10 @@ function applyRule(enabled) {
 // }
 
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.set({ redirectEnabled: true });
+  chrome.storage.local.set({ redirectEnabled: true }), () => {
+    applyRule(true);
+    console.log("fresh install - redirect enabled");
+  };
 });
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
@@ -57,4 +63,11 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
         applyRule(Boolean(changes.redirectEnabled.newValue));
         console.log("redirect enabled:", changes.redirectEnabled.newValue);
     }
+});
+
+chrome.runtime.onStartup.addListener(() => {
+    chrome.storage.local.get({ redirectEnabled: false }, ({ redirectEnabled }) => {
+        applyRule(Boolean(redirectEnabled));
+        console.log("redirect enabled:", redirectEnabled);
+    });
 });
