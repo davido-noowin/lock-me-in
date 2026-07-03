@@ -43,14 +43,6 @@ function applyRule(enabled) {
   }
 }
 
-// function init() {
-//     chrome.storage.local.get({ redirectEnabled: false}, ({ redirectEnabled }) => {
-//         applyRule(Boolean(redirectEnabled));
-//         console.log("redirect enabled:", redirectEnabled);
-//         console.log("applying rule");
-//     });
-// }
-
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.set({ redirectEnabled: true }), () => {
     applyRule(true);
@@ -61,7 +53,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === "local" && changes.redirectEnabled) {
         applyRule(Boolean(changes.redirectEnabled.newValue));
-        console.log("redirect enabled:", changes.redirectEnabled.newValue);
+        console.log("changes made to redirect:", changes.redirectEnabled.newValue);
     }
 });
 
@@ -70,4 +62,16 @@ chrome.runtime.onStartup.addListener(() => {
         applyRule(Boolean(redirectEnabled));
         console.log("redirect enabled:", redirectEnabled);
     });
+});
+
+chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+  if (details.url.includes("youtube.com/shorts")) {
+    chrome.storage.local.get({ redirectEnabled: false }, ({ redirectEnabled }) => {
+      if (redirectEnabled) {
+        chrome.tabs.update(details.tabId, { url: "https://www.google.com/" });
+      }
+    });
+  }
+}, {
+  url: [{ hostContains: "youtube.com", pathContains: "/shorts" }]
 });

@@ -9,7 +9,8 @@
   "permissions": [
     "declarativeNetRequest",
     "declarativeNetRequestFeedback",
-    "storage"
+    "storage",
+    "webNavigation"
   ],
   "host_permissions": [
     "*://*.youtube.com/*",
