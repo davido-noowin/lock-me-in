@@ -1,39 +1,73 @@
 import { useState, useEffect } from "react";
+import { BLOCKABLE_SITES } from "../SiteConfig";
+
+type SiteConfig = {
+  enabled: boolean;
+  redirectUrl: string;
+};
+
+type Sites = Record<string, SiteConfig>;
 
 export default function CommonBlockingSites() {
-    const [enabled, setEnabled] = useState(false);
+  const [sites, setSites] = useState<Sites>({});
 
-    useEffect(() => {
-        chrome.storage.local.get({ redirectEnabled: false }, (result) => {
-            setEnabled(Boolean(result.redirectEnabled));
-        });
+  useEffect(() => {
+    const loadSites = async () => {
+      const result = await chrome.storage.local.get({ sites: {} });
+      setSites(result.sites as Sites);
+    };
+    loadSites();
+  }, []);
 
-        const handleStorageChange = ( 
-            changes: { [key: string]: chrome.storage.StorageChange },
-            area: string
-        ) => {
-            if (area === "local" && changes.redirectEnabled) {
-                setEnabled(Boolean(changes.redirectEnabled.newValue));
-            }
-        };
+  async function toggleSite(key: string) {
+    const updated: Sites = {
+      ...sites,
+      [key]: {
+        ...sites[key],
+        enabled: !sites[key]?.enabled,
+        redirectUrl: sites[key]?.redirectUrl ?? "https://www.google.com/",
+      },
+    };
+    setSites(updated);
+    await chrome.storage.local.set({ sites: updated });
+  }
 
-        chrome.storage.onChanged.addListener(handleStorageChange);
-        return () => {
-            chrome.storage.onChanged.removeListener(handleStorageChange);
-        };
-    }, []);
+  async function updateRedirectUrl(key: string, url: string) {
+    const updated: Sites = {
+      ...sites,
+      [key]: {
+        ...sites[key],
+        enabled: !sites[key]?.enabled,
+        redirectUrl: url,
+      },
+    };
+    setSites(updated);
+    await chrome.storage.local.set({ sites: updated });
+  }
 
-    function toggleRedirect() {
-        chrome.storage.local.set({ redirectEnabled: !enabled });
-    }
-
-    return (
-        <div>
-            Suggested Sites to Block
-            <button onClick={toggleRedirect}>
-                {enabled ? "Enable YouTube Shorts" : "Disable YouTube Shorts" }
-            </button>
-
-        </div>
-    )
+  return (
+    <div>
+      {Object.entries(BLOCKABLE_SITES).map(
+        ([key, meta]) => (
+          <div key={key}>
+            <label>
+              {sites[key]?.enabled ? "enabled" : "disabled"}
+              <input
+                type="checkbox"
+                checked={sites[key]?.enabled || false}
+                onChange={() => toggleSite(key)}
+              />
+              {meta.label}
+            </label>
+            <input
+              type="text"
+              placeholder="Redirect URL"
+              value={sites[key]?.redirectUrl || ""}
+              onChange={(e) => updateRedirectUrl(key, e.target.value)}
+            />
+          </div>
+        ),
+      )}
+    </div>
+  );
 }
