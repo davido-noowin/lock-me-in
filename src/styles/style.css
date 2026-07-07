@@ -1,0 +1,39 @@
+:root {
+  --base-color: #e3e3e3;
+  --base-variant-color: #d9d9d9;
+  --text-color: #1e1e1e;
+  --secondary-color: #767676;
+  --accent-color: #0e56ad;
+  --switch-btn-color: white;
+}
+
+.darkmode {
+  --base-color: #1e1e1e;
+  --base-variant-color: black;
+  --text-color: #d6d6d6;
+  --secondary-color: #767676;
+  --accent-color: #0e56ad;
+  --switch-btn-color: white;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Encode Sans Expanded", sans-serif;
+}
+
+.app {
+  width: 400px;
+  height: 600px;
+  overflow: hidden;
+  background-color: var(--base-color);
+  color: var(--text-color);
+}
+
+.app::-webkit-scrollbar {
+    display: none;
+}
