@@ -23,7 +23,7 @@
 }
 
 html {
-  font-family: "Encode Sans Expanded", sans-serif;
+  font-family: "Encode Sans Expanded", sans-serif !important;
 }
 
 .app {

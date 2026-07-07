@@ -11,7 +11,7 @@ interface HeaderProps {
 export default function DarkLightModeSwitch(props: HeaderProps) {
     return (
         <button className="mode-switch" onClick={() => props.setMode((prevMode: string) => (prevMode === 'light' ? 'dark' : 'light'))}>
-            <img src={props.mode === 'light' ? moon: sun} alt="Toggle Dark/Light Mode" />
+            <img className="mode-switch-icon" src={props.mode === 'light' ? moon: sun} alt="Toggle Dark/Light Mode" />
         </button>
     )
 }

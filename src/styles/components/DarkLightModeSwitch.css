@@ -15,3 +15,8 @@
 .mode-switch:active {
     background-color: var(--base-variant-color);
 }
+
+.mode-switch-icon {
+    width: 24px;
+    height: 24px;
+}
