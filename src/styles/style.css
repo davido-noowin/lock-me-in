@@ -32,6 +32,7 @@ html {
   overflow: hidden;
   background-color: var(--base-color);
   color: var(--text-color);
+  position: relative;
 }
 
 .app::-webkit-scrollbar {

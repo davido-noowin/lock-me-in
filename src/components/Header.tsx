@@ -2,7 +2,7 @@ import DarkLightModeSwitch from "./DarkLightModeSwitch";
 import type { Dispatch, SetStateAction } from "react";
 import lightModeLogo from "../assets/images/man-studying-with-a-laptop.svg";
 import darkModeLogo from "../assets/images/man-studying-with-a-laptop-white.svg";
-import "../styles/components/header.css";
+import "../styles/components/Header.css";
 
 interface HeaderProps {
   mode: string;

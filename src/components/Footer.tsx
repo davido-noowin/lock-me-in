@@ -1,7 +1,9 @@
+import '../styles/components/Footer.css'
+
 export default function Footer() {
     return (
-        <footer>
-            Lock Me In &copy; 2026
+        <footer className="footer">
+            David Nguyen | 💻 | 2026
         </footer>
     )
 }
