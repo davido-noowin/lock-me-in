@@ -1,0 +1,17 @@
+.mode-switch {
+    position: relative;
+    border-radius: 50px;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--secondary-color);
+    background-color: var(--base-color);
+}
+
+.mode-switch:hover {
+    cursor: pointer;
+}
+
+
+.mode-switch:active {
+    background-color: var(--base-variant-color);
+}
