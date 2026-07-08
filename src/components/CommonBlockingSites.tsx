@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BLOCKABLE_SITES } from "../SiteConfig";
+import "../styles/components/CommonBlockingSites.css";
 
 type SiteConfig = {
   enabled: boolean;
@@ -46,25 +47,33 @@ export default function CommonBlockingSites() {
   }
 
   return (
-    <div>
+    <div className="common-blocking-sites-container">
+      <span className="blocked-sites-label">Blocked Sites</span>
       {Object.entries(BLOCKABLE_SITES).map(
         ([key, meta]) => (
-          <div key={key}>
-            <label>
-              {sites[key]?.enabled ? "enabled" : "disabled"}
+          <div key={key} className="site-config-container">
+            <label className="switch">
               <input
                 type="checkbox"
                 checked={sites[key]?.enabled || false}
                 onChange={() => toggleSite(key)}
               />
-              {meta.label}
+              <span className="slider round"></span>
             </label>
-            <input
+            <span className="site-config-label">
+              {meta.label}
+            </span>
+            <div className="redirect-url-container">
+              <p className="redirect-url-label">Custom Redirect URL</p>
+              <input
+              id={key}
+              className="redirect-url-input"
               type="text"
-              placeholder="Redirect URL"
+              placeholder="Default: google.com"
               value={sites[key]?.redirectUrl || ""}
               onChange={(e) => updateRedirectUrl(key, e.target.value)}
             />
+            </div>
           </div>
         ),
       )}
