@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Lock Me In",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A chrome extension that stops you from doomscrolling on YouTube Shorts (TikTok, Instagram, and TBD)",
   "action": {
     "default_popup": "index.html"
@@ -24,5 +24,11 @@
   {
     "resources": ["/fonts/EncodeSansExpanded-Regular.ttf"],
     "matches": ["<all_urls>"]
-  }]
+  }],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
 }
