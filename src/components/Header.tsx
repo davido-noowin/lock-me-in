@@ -21,7 +21,7 @@ export default function Header(props: HeaderProps) {
           />
           <div className="title-container">
             <h1 className="title">Lock Me In</h1>
-            <p className="description">Stop scrolling. Lock in.</p>
+            <p className="description">Lock in. Stop scrolling. Seriously.</p>
           </div>
         </div>
 

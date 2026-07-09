@@ -35,7 +35,7 @@ function App() {
       className={"app" + (mode === "dark" ? " darkmode" : "")}
     >
       <Header mode={mode} setMode={setMode} />
-      <Body />
+      <Body mode={mode} />
       <Footer />
     </div>
   );

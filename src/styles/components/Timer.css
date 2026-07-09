@@ -2,8 +2,75 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 250px;
-    height: 250px;
+    flex-direction: column;
+    width: 255px;
+    height: 255px;
     background-color: var(--base-variant-color);
     border-radius: 50%;
+    gap: 15px;
+}
+
+.timer-display {
+    margin-top: 30px;
+}
+
+.timer-value {
+    display: inline-block;
+    text-align: center;
+    box-sizing: border-box;
+    min-width: 90px;
+    font-size: 24px;
+    font-weight: 600;
+    border: 1px solid var(--text-color);
+    padding: 10px 27px;
+    font-variant-numeric: tabular-nums;
+}
+
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 7px;
+}
+
+.timer-control-button{
+    font-size: 12px;
+    padding: 5px 5px;
+    font-weight: 200;
+    color: var(--base-secondary-color);
+    background-color: var(--base-color);
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
+}
+
+.timer-control-button:hover {
+    cursor: pointer;
+}
+
+.timer-control-button:active {
+    background-color: var(--base-variant-color);
+}
+
+.timer-play-button {
+    width: 100px;
+    height: 22px;
+    border: none;
+    background-color: var(--secondary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.timer-play-button > img {
+    width: 15px;
+    height: 15px;
+}
+
+.timer-play-button:hover {
+    cursor: pointer;
+}
+
+.timer-play-button:active {
+    background-color: var(--tertiary-color);
 }
