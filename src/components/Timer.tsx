@@ -7,7 +7,7 @@ import AlertModal from "./AlertModal";
 export default function Timer(props: { mode: string }) {
   const [time, setTime] = useState(0); // Time in seconds
   const [isRunning, setIsRunning] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     if (isRunning && time > 0) {
@@ -57,6 +57,7 @@ export default function Timer(props: { mode: string }) {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           setIsRunning={setIsRunning}
+          mode={props.mode}
         />
       )}
       <div className="timer-display">

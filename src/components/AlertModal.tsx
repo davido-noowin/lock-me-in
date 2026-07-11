@@ -5,11 +5,13 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import type { Dispatch, SetStateAction } from "react";
+import "../styles/components/AlertModal.css";
 
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsRunning: Dispatch<SetStateAction<boolean>>;
+  mode: string;
 };
 
 export default function AlertModal(props: ModalProps) {
@@ -23,18 +25,18 @@ export default function AlertModal(props: ModalProps) {
     }
 
   return (
-    <Dialog open={props.isOpen} onClose={() => props.setIsOpen(false)}>
-      <div>
-        <DialogPanel>
-          <DialogTitle>Notice:</DialogTitle>
-          <Description>
+    <Dialog className={"modal-overlay" + (props.mode === "dark" ? " darkmode" : "")} open={props.isOpen} onClose={() => props.setIsOpen(false)}>
+      <div className="modal-shell">
+        <DialogPanel className="modal-contents">
+          <DialogTitle className="modal-title">Notice:</DialogTitle>
+          <Description className="modal-description">
             While the timer is active, the sites below will all be blocked and
             you cannot access them until the timer runs out.
           </Description>
-          <p>Are you sure you want to proceed?</p>
-          <div>
-            <button onClick={CloseModal}>Cancel</button>
-            <button onClick={StartTimer}>Start Timer</button>
+          <p className="modal-description-2">Are you sure you want to <strong>proceed</strong>?</p>
+          <div className="modal-btn-group">
+            <button className="modal-btn cancel" onClick={CloseModal}>Cancel</button>
+            <button className="modal-btn" onClick={StartTimer}>Start Timer</button>
           </div>
         </DialogPanel>
       </div>
