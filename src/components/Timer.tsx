@@ -1,16 +1,22 @@
 import "../styles/components/Timer.css";
 import playLightMode from "../assets/images/playLightMode.png";
 import playDarkMode from "../assets/images/playDarkMode.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
 import AlertModal from "./AlertModal";
 
-export default function Timer(props: { mode: string }) {
+type TimerProps = {
+  mode: string;
+  isRunning: boolean;
+  setIsRunning: Dispatch<SetStateAction<boolean>>;
+  onStartTimer: () => void | Promise<void>;
+};
+
+export default function Timer(props: TimerProps) {
   const [time, setTime] = useState(0); // Time in seconds
-  const [isRunning, setIsRunning] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (isRunning && time > 0) {
+    if (props.isRunning && time > 0) {
       const interval = setInterval(() => {
         setTime((prevTime) => prevTime - 1);
       }, 1000);
@@ -19,13 +25,11 @@ export default function Timer(props: { mode: string }) {
     } else if (time === 0) {
       handleTimerCompletion();
     }
-  }, [isRunning, time]);
+  }, [props.isRunning, time]);
 
   function handleTimerCompletion() {
-    setIsRunning(false);
+    props.setIsRunning(false);
     setTime(0);
-    // enable the switches again
-    // enable the play button
   }
 
   function handlePlayButtonClick() {
@@ -33,8 +37,6 @@ export default function Timer(props: { mode: string }) {
     if (time <= 0 ) {
       return;
     }
-    // create a modal that warns the user they cant cancel the timer + it disables the switches
-    // disable the play button
     setIsOpen(true);
   }
 
@@ -56,7 +58,8 @@ export default function Timer(props: { mode: string }) {
         <AlertModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          setIsRunning={setIsRunning}
+          setIsRunning={(props.setIsRunning)}
+          onStartTimer={props.onStartTimer}
           mode={props.mode}
         />
       )}
@@ -65,35 +68,35 @@ export default function Timer(props: { mode: string }) {
       </div>
       <div className="timer-controls">
         <button
-          disabled={isRunning}
+          disabled={props.isRunning}
           className="timer-control-button"
           onClick={() => changeTime(-5 * 60)}
         >
           - 5 min
         </button>
         <button
-          disabled={isRunning}
+          disabled={props.isRunning}
           className="timer-control-button"
           onClick={() => changeTime(-1 * 60)}
         >
           - 1 min
         </button>
         <button
-          disabled={isRunning}
+          disabled={props.isRunning}
           className="timer-control-button"
           onClick={() => changeTime(1 * 60)}
         >
           + 1 min
         </button>
         <button
-          disabled={isRunning}
+          disabled={props.isRunning}
           className="timer-control-button"
           onClick={() => changeTime(5 * 60)}
         >
           + 5 min
         </button>
       </div>
-      <button disabled={isRunning} className="timer-play-button" onClick={handlePlayButtonClick}>
+      <button disabled={props.isRunning} className="timer-play-button" onClick={handlePlayButtonClick}>
         <img
           src={props.mode === "light" ? playLightMode : playDarkMode}
           alt="Play Button"

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { BLOCKABLE_SITES } from "../SiteConfig";
 import "../styles/components/CommonBlockingSites.css";
 
@@ -9,40 +9,36 @@ type SiteConfig = {
 
 type Sites = Record<string, SiteConfig>;
 
-export default function CommonBlockingSites() {
-  const [sites, setSites] = useState<Sites>({});
+type CommonBlockingSitesProps = {
+  isRunning: boolean;
+  sites: Sites;
+  setSites: Dispatch<SetStateAction<Sites>>;
+}
 
-  useEffect(() => {
-    const loadSites = async () => {
-      const result = await chrome.storage.local.get({ sites: {} });
-      setSites(result.sites as Sites);
-    };
-    loadSites();
-  }, []);
-
+export default function CommonBlockingSites(props: CommonBlockingSitesProps) {
   async function toggleSite(key: string) {
     const updated: Sites = {
-      ...sites,
+      ...props.sites,
       [key]: {
-        ...sites[key],
-        enabled: !sites[key]?.enabled,
-        redirectUrl: sites[key]?.redirectUrl ?? "https://www.google.com/",
+        ...props.sites[key],
+        enabled: !props.sites[key]?.enabled,
+        redirectUrl: props.sites[key]?.redirectUrl ?? "https://www.google.com/",
       },
     };
-    setSites(updated);
+    props.setSites(updated);
     await chrome.storage.local.set({ sites: updated });
   }
 
   async function updateRedirectUrl(key: string, url: string) {
     const updated: Sites = {
-      ...sites,
+      ...props.sites,
       [key]: {
-        ...sites[key],
-        enabled: !sites[key]?.enabled,
+        ...props.sites[key],
+        enabled: !props.sites[key]?.enabled,
         redirectUrl: url,
       },
     };
-    setSites(updated);
+    props.setSites(updated);
     await chrome.storage.local.set({ sites: updated });
   }
 
@@ -54,8 +50,9 @@ export default function CommonBlockingSites() {
           <div key={key} className="site-config-container">
             <label className="switch">
               <input
+                disabled={props.isRunning}
                 type="checkbox"
-                checked={sites[key]?.enabled || false}
+                checked={props.sites[key]?.enabled || false}
                 onChange={() => toggleSite(key)}
               />
               <span className="slider round"></span>
@@ -66,11 +63,12 @@ export default function CommonBlockingSites() {
             <div className="redirect-url-container">
               <p className="redirect-url-label">Custom Redirect URL</p>
               <input
+              disabled={props.isRunning}
               id={key}
               className="redirect-url-input"
               type="text"
               placeholder="Default: google.com"
-              value={sites[key]?.redirectUrl || ""}
+              value={props.sites[key]?.redirectUrl || ""}
               onChange={(e) => updateRedirectUrl(key, e.target.value)}
             />
             </div>

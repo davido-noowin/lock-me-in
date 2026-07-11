@@ -11,6 +11,7 @@ type ModalProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsRunning: Dispatch<SetStateAction<boolean>>;
+  onStartTimer: () => void | Promise<void>;
   mode: string;
 };
 
@@ -22,6 +23,7 @@ export default function AlertModal(props: ModalProps) {
     function StartTimer() {
         props.setIsRunning(true);
         CloseModal();
+        props.onStartTimer();
     }
 
   return (
