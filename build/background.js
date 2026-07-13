@@ -1,5 +1,24 @@
 import { BLOCKABLE_SITES } from "./siteConfig.js";
 
+function startTimer(durationInMS) {
+  const timerState = {
+    startTime: Date.now(),
+    duration: durationInMS,
+    running: true
+  };
+
+  chrome.storage.local.set({timer: timerState});
+
+  chrome.alarms.create("timerComplete", { when: Date.now() + durationInMS });
+}
+
+function stopTimer() {
+  chrome.storage.local.set({
+    timer: { startTime: 0, duration: 0, running: false }
+  });
+  chrome.alarms.clear("timerComplete");
+}
+
 function buildRules(sitesConfig) {
   const rules = [];
   for (const key in sitesConfig) {
@@ -78,4 +97,24 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === "local" && changes.sites) {
     applyAllRules(changes.sites.newValue);
   }
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === "timerComplete") {
+    chrome.storage.local.set({
+      timer: { startTime: 0, duration: 0, running: false }
+    })
+  }
+})
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "START_TIMER") {
+    startTimer(message.durationMs);
+    sendResponse({ ok: true})
+  }
+  else if (message.type === "STOP_TIMER") {
+    stopTimer();
+    sendResponse({ ok: true });
+  }
+  return true;
 });

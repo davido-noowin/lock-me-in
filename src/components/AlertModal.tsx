@@ -10,9 +10,9 @@ import "../styles/components/AlertModal.css";
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  setIsRunning: Dispatch<SetStateAction<boolean>>;
   onStartTimer: () => void | Promise<void>;
   mode: string;
+  duration: number
 };
 
 export default function AlertModal(props: ModalProps) {
@@ -20,8 +20,8 @@ export default function AlertModal(props: ModalProps) {
         props.setIsOpen(false);
     }
 
-    function StartTimer() {
-        props.setIsRunning(true);
+    async function StartTimer() {
+        await chrome.runtime.sendMessage({ type: "START_TIMER", durationMs: props.duration})
         CloseModal();
         props.onStartTimer();
     }
