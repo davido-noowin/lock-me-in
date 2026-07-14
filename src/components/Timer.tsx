@@ -16,7 +16,7 @@ export default function Timer(props: TimerProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   function handlePlayButtonClick() {
-    console.log("Play button clicked");
+    // console.log("Play button clicked");
     if (duration <= 0) {
       return;
     }

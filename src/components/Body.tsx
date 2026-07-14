@@ -52,14 +52,15 @@ export default function Body(props: { mode: string }) {
 
   function computeRemainingtime(state: TimerState): number {
     if (!state.running) {
+      setIsRunning(state.running);
       return 0;
     }
     const elapsed = Date.now() - state.startTime;
-    console.log("TIME STATE:", time);
-    console.log(
-      "duration - elapsed:",
-      Math.max(0, state.duration - elapsed) * 1000,
-    );
+    // console.log("TIME STATE:", time);
+    // console.log(
+    //   "duration - elapsed:",
+    //   Math.max(0, state.duration - elapsed) * 1000,
+    // );
     return Math.max(0, state.duration - elapsed); // time in ms
   }
 
@@ -69,8 +70,13 @@ export default function Body(props: { mode: string }) {
     });
     if (result) {
       const state = result.timer as TimerState;
+      const timeRemaining = computeRemainingtime(state);
       setIsRunning(state.running);
-      setTime(computeRemainingtime(state));
+      setTime(timeRemaining);
+
+      if (timeRemaining <= 0 && state.running) {
+        await chrome.runtime.sendMessage({ type: "STOP_TIMER" });
+    }
     }
   }
 
